@@ -10,7 +10,7 @@ import Foundation
 
 public class AWEventManager {
     
-    public typealias EventBlock = () -> ()
+    public typealias EventBlock = (Any?) -> Void
     
     struct Event {
         var identifier: String!
@@ -28,13 +28,11 @@ public class AWEventManager {
 
 extension AWEventManager {
     
-    public static func send(event withName: String) {
+    public static func send(event withName: String, with object: Any? = nil) {
         AWEventManager.shared.events?.forEach { (event) in
-            if event.identifier == withName { event.event() }
+            if event.identifier == withName { event.event(object) }
         }
     }
-    
-    
     
     public static func listen(to eventName: String!,
                               from sender: AnyObject!,
@@ -52,7 +50,6 @@ extension AWEventManager {
         let event = Event(identifier: eventName, event: block, sender: sender)
         AWEventManager.shared.events?.append(event)
     }
-    
     
     public static func remove(event withName: String,
                               sender: AnyObject) {
